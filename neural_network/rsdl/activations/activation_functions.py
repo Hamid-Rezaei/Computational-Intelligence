@@ -1,15 +1,21 @@
 from rsdl import Tensor, Dependency
 import numpy as np
 
+
 def Sigmoid(t: Tensor) -> Tensor:
-    # TODO: implement sigmoid function
-    # hint: you can do it using function you've implemented (not directly define grad func)
-    return None
+    # implement sigmoid function
+    t = -t
+    return 1 / (1 + t.exp())
+
 
 def Tanh(t: Tensor) -> Tensor:
-    # TODO: implement tanh function
-    # hint: you can do it using function you've implemented (not directly define grad func)
-    return None
+    # implement tanh function
+    x = t
+    neg_x = -t
+    tanh = (x.exp() - neg_x.exp()) / (x.exp() + neg_x.exp())
+
+    return tanh
+
 
 def Softmax(t: Tensor) -> Tensor:
     # TODO: implement softmax function
@@ -20,38 +26,33 @@ def Softmax(t: Tensor) -> Tensor:
     # hint: a/b = a*(b^-1)
     return None
 
+
 def Relu(t: Tensor) -> Tensor:
-    # TODO: implement relu function
+    # implement relu function
 
-    # use np.maximum
-    data = ...
+    data = np.maximum(0, t.data)
+    req_grad = t.requires_grad
 
-    req_grad = ...
     if req_grad:
         def grad_fn(grad: np.ndarray):
-            # use np.where
-            return None
-        
+            return grad * np.where(t.data < 0, 0, 1)
+
         depends_on = [Dependency(t, grad_fn)]
     else:
         depends_on = []
     return Tensor(data=data, requires_grad=req_grad, depends_on=depends_on)
 
 
-def LeakyRelu(t: Tensor,leak=0.05) -> Tensor:
-    """
-    fill 'data' and 'req_grad' and implement LeakyRelu grad_fn 
-    hint: use np.where like Relu method but for LeakyRelu
-    """
-    # TODO: implement leaky_relu function
-    
-    data = ...
-    
-    req_grad = ...
+def LeakyRelu(t: Tensor, leak=0.05) -> Tensor:
+    # implement leaky_relu function
+
+    data = np.where(t.data < 0, leak * t.data, t.data)
+    req_grad = t.requires_grad
+
     if req_grad:
         def grad_fn(grad: np.ndarray):
-            return None
-        
+            return grad * np.where(t.data < 0, leak, 1)
+
         depends_on = [Dependency(t, grad_fn)]
     else:
         depends_on = []
