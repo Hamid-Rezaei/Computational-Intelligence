@@ -16,7 +16,7 @@ class Linear:
         # initialize weight by initializer function (zero mode)
         if self.need_bias:
             self.bias = Tensor(
-                data=initializer(shape=self.shape, mode="zero"),
+                data=initializer(shape=(1, out_channels), mode="zero"),
                 requires_grad=True
             )
 
@@ -25,7 +25,6 @@ class Linear:
         return inp @ self.weight + self.bias
 
     def parameters(self):
-
         if self.need_bias:
             return [self.weight, self.bias]
         return [self.weight]

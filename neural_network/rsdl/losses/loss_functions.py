@@ -5,8 +5,8 @@ from rsdl import Tensor
 
 def MeanSquaredError(preds: Tensor, actual: Tensor):
     # implement mean squared error
-    E = preds.data - actual.data
-    mse = (1 / len(actual.data)) * np.dot(E.T, E)
+    E = (preds - actual) ** 2
+    mse = E.sum().data / len(actual.data)
 
     return mse
 
