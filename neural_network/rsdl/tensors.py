@@ -91,8 +91,8 @@ class Tensor:
         # self += other
         res = _add(self, ensure_tensor(other))
         self.data = res.data
-        self.grad = res.grad
         self.requires_grad = res.requires_grad
+        self.depends_on = res.depends_on
 
         return self
 
@@ -108,8 +108,8 @@ class Tensor:
         # self -= other
         res = _sub(self, ensure_tensor(other))
         self.data = res.data
-        self.grad = res.grad
         self.requires_grad = res.requires_grad
+        self.depends_on = res.depends_on
 
         return self
 
@@ -141,8 +141,9 @@ class Tensor:
     def __getitem__(self, idcs):
         return _tensor_slice(self, idcs)
 
-    def __neg__(self):
-        return _tensor_neg(self)
+    def __neg__(self, idcs):
+        neg = _tensor_neg(self)
+        return _tensor_slice(neg, idcs)
 
     def backward(self, grad: 'Tensor' = None) -> None:
         if grad is None:

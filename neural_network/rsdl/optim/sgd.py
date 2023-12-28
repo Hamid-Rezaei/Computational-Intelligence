@@ -9,10 +9,13 @@ class SGD(Optimizer):
 
     def step(self):
         # update weight and biases ( Don't use '-=' and use l.weight = l.weight - ... )
-        for layer in self.layers:
-            for param in layer.parameters():
-                gradient = param.grad()
 
-                layer.weight.data = layer.weight.data - self.learning_rate * gradient
-                if layer.need_bias:
-                    layer.bias.data = layer.bias.data - self.learning_rate * gradient
+        for param in self.layers.parameters()[0]:
+            gradient = param.grad
+
+            self.layers.weight.data = self.layers.weight.data - self.learning_rate * gradient
+
+        for param in self.layers.parameters()[1]:
+            gradient = param.grad
+            if self.layers.need_bias:
+                self.layers.bias.data = self.layers.bias.data - self.learning_rate * gradient
