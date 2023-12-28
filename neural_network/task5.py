@@ -18,7 +18,7 @@ l = Linear(in_channels=3, out_channels=1)
 
 # define an optimizer using SGD() class
 criterion = loss_functions.MeanSquaredError
-optimizer = SGD(layers=l, learning_rate=0.002)
+optimizer = SGD(layers=[l], learning_rate=0.002)
 
 # print weight and bias of linear layer
 print("initial weight:", l.weight)
@@ -30,7 +30,7 @@ batch_size = 10
 for epoch in range(100):
 
     epoch_loss = 0.0
-
+    print("Epoch:", epoch)
     for start in range(0, 100, batch_size):
         end = start + batch_size
 
@@ -42,7 +42,7 @@ for epoch in range(100):
         predicted = l(inputs)
 
         actual = y[start:end]
-        actual.data = actual.data.reshape(batch_size, 1)
+        actual.data = actual.data.reshape(-1, 1)
 
         loss = criterion(predicted, actual)
 
