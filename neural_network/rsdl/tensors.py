@@ -141,9 +141,8 @@ class Tensor:
     def __getitem__(self, idcs):
         return _tensor_slice(self, idcs)
 
-    def __neg__(self, idcs):
-        neg = _tensor_neg(self)
-        return _tensor_slice(neg, idcs)
+    def __neg__(self):
+        return _tensor_neg(self)
 
     def backward(self, grad: 'Tensor' = None) -> None:
         if grad is None:

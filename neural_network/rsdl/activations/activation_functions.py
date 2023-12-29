@@ -5,26 +5,47 @@ import numpy as np
 def Sigmoid(t: Tensor) -> Tensor:
     # implement sigmoid function
     t = -t
-    return 1 / (1 + t.exp())
+    t_exp = t.exp()
+    denominator_data = t_exp().data + 1
+    denominator = Tensor(data=denominator_data, requires_grad=t_exp.requires_grad, depends_on=t_exp.depends_on)
+
+    return Tensor(
+        data=(1 / denominator.data),
+        requires_grad=denominator.requires_grad,
+        depends_on=denominator.depends_on
+    )
 
 
 def Tanh(t: Tensor) -> Tensor:
     # implement tanh function
     x = t
     neg_x = -t
-    tanh = (x.exp() - neg_x.exp()) / (x.exp() + neg_x.exp())
+    numerator = (x.exp() - neg_x.exp())
+    denominator = (x.exp() + neg_x.exp())
+
+    tanh = numerator * Tensor(
+        data=(1 / denominator.data),
+        requires_grad=denominator.requires_grad,
+        depends_on=denominator.depends_on
+    )
 
     return tanh
 
 
 def Softmax(t: Tensor) -> Tensor:
-    # TODO: implement softmax function
+    # implement softmax function
     # hint: you can do it using function you've implemented (not directly define grad func)
     # hint: you can't use sum because it has not axis argument so there are 2 ways:
     #        1. implement sum by axis
     #        2. using matrix mul to do it :) (recommended)
     # hint: a/b = a*(b^-1)
-    return None
+    t_exp = t.exp()
+    sum_exp_t = t_exp @ Tensor(data=np.ones((t.shape[1], 1)), requires_grad=True)
+    return t_exp * Tensor(
+        data=1 / sum_exp_t.data + 1,  # for smoothing
+        requires_grad=sum_exp_t.requires_grad,
+        depends_on=sum_exp_t.depends_on
+    )
 
 
 def Relu(t: Tensor) -> Tensor:
