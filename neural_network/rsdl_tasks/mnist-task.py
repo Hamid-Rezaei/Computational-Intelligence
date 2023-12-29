@@ -11,11 +11,11 @@ from rsdl.tensors import Tensor
 # 1. load mnist dataset for our framework
 
 # load data
-train_set = pd.read_csv("./Datasets/MNIST/csv/train.csv", sep=',', header=None)
+train_set = pd.read_csv("../Datasets/MNIST/csv/train.csv", sep=',', header=None)
 train_label = train_set.iloc[:, 0]
 train_set = train_set.iloc[:, 1:]
 
-test_set = pd.read_csv("./Datasets/MNIST/csv/test.csv", sep=',', header=None)
+test_set = pd.read_csv("../Datasets/MNIST/csv/test.csv", sep=',', header=None)
 test_label = test_set.iloc[:, 0]
 test_set = test_set.iloc[:, 1:]
 
